@@ -1,0 +1,11 @@
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.cardRouter = void 0;
+const express_1 = require("express");
+const card_controller_1 = require("../controllers/card.controller");
+const multer_1 = require("../middlewares/multer");
+const authenticateToken_1 = require("../middlewares/authenticateToken");
+const router = (0, express_1.Router)();
+exports.cardRouter = router;
+router.get('/', authenticateToken_1.authenticateToken, card_controller_1.index);
+router.post('/store', authenticateToken_1.authenticateToken, multer_1.upload.single('file'), card_controller_1.store);
