@@ -54,6 +54,15 @@ const Card = mongoose.model('Card', cardSchema);
 export default Card;
 
 export const getCards = async () => { return await Card.find() };
+
+export const getCardById = async (cardId: string) => {
+  return await Card.findOne({
+    _id: cardId
+  }).populate({
+    path: 'theme',
+    select: '-cards' // kiválasztja a témát, de kihagyja a 'cards' mezőt
+  });
+};
 export const getCardsByUserId = async (userId: string) => {
   return await Card.find({
     user: userId
@@ -79,3 +88,7 @@ export const createCard = async (values: Record<string, any>) => {
 };
 
 export const deleteCardById = async (id: string) => { return await Card.findOneAndDelete({ _id: id }) }
+export const updateCardById = async (id: string, values: Record<string, any>) => {
+  return await Card.findOneAndUpdate({ _id: id }, values, {new: true});
+};
+

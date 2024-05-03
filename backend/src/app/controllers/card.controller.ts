@@ -1,13 +1,34 @@
 import { Request, Response } from "express";
-import { createCard, deleteCardById, getCardsByUserId, getCardsByUserIdWithPaginate } from "../models/Card";
+import { createCard, deleteCardById, getCardById, getCardsByUserId, getCardsByUserIdWithPaginate, updateCardById } from "../models/Card";
 import Theme from "../models/Theme";
 
 
 
 const index = async (req: Request, res: Response) => {
+
+  const { cardId } = req.params;
+
+  try {
+
+    const card = await getCardById(cardId)
+
+    return res.status(200).json({
+      status: true,
+      message: "Get cards successfully!",
+      data: card,
+    });
+  } catch (error) {
+    return res.status(500).json({
+      status: true,
+      message: "Cards get fail!",
+    });
+  }
+}
+
+const all = async (req: Request, res: Response) => {
   const { user }: Record<string, any> = req;
   const page = req.query.page ? parseInt(req.query.page as string) : 1;
-  const limit = 2;
+  const limit = 10;
 
   try {
     const allCards = await getCardsByUserId(user._id)
@@ -125,6 +146,43 @@ const destroy = async (req: Request, res: Response) => {
 };
 
 
+const update = async (req: Request, res: Response) => {
+
+  const { cardId } = req.params;
+  const parsedData = JSON.parse(req.body.data);
+  const { word, translate, sentence, themeId } = parsedData;
+  const lang = 'En'
+
+
+  try {
+    const updatedCard = await updateCardById(cardId, {
+      word: word.toLowerCase(),
+      translate: translate.toLowerCase(),
+      sentence: replaceWordInSentence(translate.toLowerCase(), sentence.toLowerCase()),
+      theme: themeId,
+      lang: lang,
+    })
+
+    const updatedTheme = await Theme.findByIdAndUpdate(themeId, {
+      $pull: { cards: cardId }
+    });
+    const newTheme = await Theme.findOne({ _id: themeId });
+    await Theme.updateOne({ _id: newTheme._id }, { $push: { cards: updatedCard._id } });
+
+
+
+
+    return res.status(200).json({
+      status: true,
+      message: "Get cards successfully!",
+      data: updatedCard,
+    });
+  } catch (err) {
+    console.error(err)
+  }
+}
+
+
 
 
 
@@ -132,9 +190,14 @@ const destroy = async (req: Request, res: Response) => {
 
 function replaceWordInSentence(translate: string, sentence: string) {
   var replacement = "_".repeat(translate.length);
+  var regex = new RegExp("\\b" + translate + "\\b", "g"); // "\\b" jelzi a szóhatárt
 
+  return sentence.replace(regex, replacement);
 
-  return sentence.replace(translate, replacement);
 }
 
-export { store, index, destroy }
+
+
+
+
+export { store, all, destroy, index, update }

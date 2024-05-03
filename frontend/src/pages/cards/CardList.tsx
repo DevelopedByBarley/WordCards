@@ -8,6 +8,7 @@ import Pagination from "../../components/Pagination";
 import { toast } from "react-toastify";
 import useFetchDataAndPaginate from "../../hooks/useFetchDataAndPaginate";
 import CardRow from "../../components/CardRow";
+import { ThemesType } from "../themes/Themes";
 
 
 
@@ -22,6 +23,7 @@ export type CardType = {
   updatedAt: string;
   user: string;
   word: string;
+  theme:  ThemesType
   __v: number;
   _id: string;
 };

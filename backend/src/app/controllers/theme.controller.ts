@@ -8,7 +8,7 @@ import { createOtherThemeByUser, createTheme, getThemesByUserId, getThemesByUser
 const all = async (req: Request, res: Response) => {
   const { user }: Record<string, any> = req;
   const page = req.query.page ? parseInt(req.query.page as string) : null;
-  const limit = 1;
+  const limit = 10;
 
   try {
     const allThemes = await getThemesByUserId(user._id)

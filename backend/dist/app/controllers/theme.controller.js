@@ -14,7 +14,7 @@ const Theme_1 = require("../models/Theme");
 const all = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const { user } = req;
     const page = req.query.page ? parseInt(req.query.page) : null;
-    const limit = 1;
+    const limit = 10;
     try {
         const allThemes = yield (0, Theme_1.getThemesByUserId)(user._id);
         if (allThemes.length === 0) {

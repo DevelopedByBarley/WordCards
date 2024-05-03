@@ -9,7 +9,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.deleteCardById = exports.createCard = exports.getCardsByThemeId = exports.getCardsByUserIdWithPaginate = exports.getCardsByUserId = exports.getCards = void 0;
+exports.updateCardById = exports.deleteCardById = exports.createCard = exports.getCardsByThemeId = exports.getCardsByUserIdWithPaginate = exports.getCardsByUserId = exports.getCardById = exports.getCards = void 0;
 const mongoose = require('mongoose');
 const { Schema } = mongoose;
 const cardSchema = new Schema({
@@ -62,6 +62,15 @@ const Card = mongoose.model('Card', cardSchema);
 exports.default = Card;
 const getCards = () => __awaiter(void 0, void 0, void 0, function* () { return yield Card.find(); });
 exports.getCards = getCards;
+const getCardById = (cardId) => __awaiter(void 0, void 0, void 0, function* () {
+    return yield Card.findOne({
+        _id: cardId
+    }).populate({
+        path: 'theme',
+        select: '-cards' // kiválasztja a témát, de kihagyja a 'cards' mezőt
+    });
+});
+exports.getCardById = getCardById;
 const getCardsByUserId = (userId) => __awaiter(void 0, void 0, void 0, function* () {
     return yield Card.find({
         user: userId
@@ -87,3 +96,7 @@ const createCard = (values) => __awaiter(void 0, void 0, void 0, function* () {
 exports.createCard = createCard;
 const deleteCardById = (id) => __awaiter(void 0, void 0, void 0, function* () { return yield Card.findOneAndDelete({ _id: id }); });
 exports.deleteCardById = deleteCardById;
+const updateCardById = (id, values) => __awaiter(void 0, void 0, void 0, function* () {
+    return yield Card.findOneAndUpdate({ _id: id }, values, { new: true });
+});
+exports.updateCardById = updateCardById;

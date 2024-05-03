@@ -7,7 +7,7 @@ function generateAccessToken(userId: string) {
   const accessTokenSecret = process.env.ACCESS_TOKEN_SECRET;
 
   if (!accessTokenSecret) return false;
-  return jwt.sign({ userId: userId }, accessTokenSecret, { expiresIn: '15m' });
+  return jwt.sign({ userId: userId }, accessTokenSecret, { expiresIn: '30m' });
 }
 
 function generateRefreshToken(userId: string) {

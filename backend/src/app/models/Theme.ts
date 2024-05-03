@@ -41,8 +41,6 @@ export const getThemesByUserId = async (userId: string) => {
 };
 
 export const createOtherThemeByUser = async (userId: string) => {
-
-
   return await Theme.create({
     lang: 'En',
     name: 'Egyéb',
@@ -63,3 +61,4 @@ export const getThemesByUserIdWithPaginate = async (userId: string, page: number
 export const createTheme = async (values: Record<string, any>) => {
   return await Theme.create(values);
 }
+

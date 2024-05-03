@@ -11,11 +11,11 @@ import Register from './pages/user/Register';
 import Dashboard from './pages/user/Dashboard';
 import { UserContextProvider } from './contexts/UserContext';
 import AddTheme from './pages/themes/AddTheme';
-import AddCard from './pages/cards/AddCard';
 import ThemeCards from './pages/themes/ThemeCards';
 import Themes from './pages/themes/Themes';
 import Profile from './pages/user/Profile';
 import CardList from './pages/cards/CardList';
+import CardForm from './pages/cards/CardForm';
 
 
 
@@ -31,7 +31,8 @@ const router = createBrowserRouter(
     </Route>
     <Route path='cards'>
       <Route path='' element={<CardList />} />
-      <Route path='store' element={<AddCard />} />
+      <Route path='store' element={<CardForm />} />
+      <Route path='update/:cardId' element={<CardForm />} />
     </Route>
     <Route path='themes'>
       <Route path='' element={<Themes />} />

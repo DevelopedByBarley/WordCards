@@ -18,7 +18,7 @@ function generateAccessToken(userId) {
     const accessTokenSecret = process.env.ACCESS_TOKEN_SECRET;
     if (!accessTokenSecret)
         return false;
-    return jsonwebtoken_1.default.sign({ userId: userId }, accessTokenSecret, { expiresIn: '15m' });
+    return jsonwebtoken_1.default.sign({ userId: userId }, accessTokenSecret, { expiresIn: '30m' });
 }
 exports.generateAccessToken = generateAccessToken;
 function generateRefreshToken(userId) {

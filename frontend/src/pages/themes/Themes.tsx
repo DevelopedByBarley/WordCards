@@ -6,7 +6,7 @@ import Pagination from "../../components/Pagination";
 import { useFetchUserData } from "../../hooks/useFetchUserData";
 import useFetchDataAndPaginate from "../../hooks/useFetchDataAndPaginate";
 
-type ThemesType = {
+export type ThemesType = {
   _id: string
   name: string
   description: string
