@@ -11,7 +11,6 @@ const storage = multer_1.default.diskStorage({
         cb(null, './src/public/images');
     },
     filename: function (req, file, cb) {
-        console.log(file);
         const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1E9);
         const fileExtension = path_1.default.extname(file.originalname); // Fájl kiterjesztésének meghatározása
         cb(null, file.fieldname + '-' + uniqueSuffix + fileExtension); // Fájl név összeállítása kiterjesztéssel

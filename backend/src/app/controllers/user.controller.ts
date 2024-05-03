@@ -2,6 +2,8 @@ import { Response, Request, ErrorRequestHandler } from "express";
 import { createUser, deleteUserById, getUserByEmail, getUserById, getUsers } from "../models/User";
 import { generateAccessToken, generateRefreshToken } from "../helpers/generateToken";
 import bcrypt from 'bcrypt'
+import { setCardsForRepeat } from "../helpers/setCardsForRepeat";
+import Card from "../models/Card";
 
 const all = async (req: Request, res: Response) => {
   try {
@@ -28,11 +30,20 @@ const all = async (req: Request, res: Response) => {
 }
 
 const index = async (req: Request, res: Response) => {
-  const userId: string = (req as Record<string, any>).user._id;  
-  
+  const userId: string = (req as Record<string, any>).user._id;
+
+  await setCardsForRepeat(userId);
+
   try {
     const user = await getUserById(userId);
     if (!user) return res.status(404).json({ message: 'User not found', status: false });
+
+    user.cardsForRepeat = await Card.find({
+      user: user._id,
+      repeat: true
+    }).exec();
+
+    user.currentCapacity = await checkCapacity(userId, user.capacity);
 
     res.status(200).json({
       user,
@@ -53,7 +64,6 @@ const store = async (req: Request, res: Response) => {
   const { name, email, password, capacity } = req.body;
   const saltRounds = 10;
 
-  console.log(password);
 
 
   try {
@@ -97,9 +107,6 @@ const destroy = async (req: Request, res: Response) => {
 
 const login = async (req: Request, res: Response) => {
   const { email, password } = req.body;
-  
-  console.log(email, password);
-  
 
   try {
     const user: Record<string, any> | null = await getUserByEmail(email);
@@ -145,4 +152,54 @@ const login = async (req: Request, res: Response) => {
 
 };
 
-export { all, index, store, login, destroy }
+
+
+
+const logout = async (req: Request, res: Response) => {
+  try {
+    // Töröljük a refresh token-t a kliens cookie-jából
+    res.clearCookie('refreshToken');
+
+    res.status(200).json({
+      status: true,
+      message: 'User successfully logged out.',
+    });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({
+      status: false,
+    });
+  }
+};
+
+
+
+
+async function checkCapacity(userId: string, capacity: number) {
+
+
+  // Mai nap kezdetének dátuma (év-hónap-nap 00:00:00 órával)
+  const startOfToday = new Date();
+  startOfToday.setHours(0, 0, 0, 0);
+
+  // Mai nap vége dátuma (év-hónap-nap 23:59:59.999 órával)
+  const endOfToday = new Date();
+  endOfToday.setHours(23, 59, 59, 999);
+
+  // Keresés a kártyák között, amelyek a mai napon lettek létrehozva
+  const cards = await Card.find({
+    user: userId,
+    createdAt: {
+      $gte: startOfToday, // Nagyobb vagy egyenlő, mint a mai nap kezdete
+      $lte: endOfToday    // Kisebb vagy egyenlő, mint a mai nap vége
+    }
+  });
+
+
+
+
+  if ((cards.length !== 0) && capacity < cards.length) return false;
+  return capacity - cards.length;
+}
+
+export { all, index, store, login, logout, destroy }

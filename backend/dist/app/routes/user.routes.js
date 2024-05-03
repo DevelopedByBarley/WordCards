@@ -9,5 +9,6 @@ exports.userRouter = router;
 router.get('/', authenticateToken_1.authenticateToken, user_controller_1.all);
 router.post('/register', user_controller_1.store);
 router.post('/login', user_controller_1.login);
-router.delete('/:id', user_controller_1.destroy);
+router.get('/logout', authenticateToken_1.authenticateToken, user_controller_1.logout);
+router.delete('/:id', authenticateToken_1.authenticateToken, user_controller_1.destroy);
 router.get('/index', authenticateToken_1.authenticateToken, user_controller_1.index);

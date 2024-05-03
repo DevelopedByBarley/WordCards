@@ -9,7 +9,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.createCard = exports.getCardsByUserId = exports.getCards = void 0;
+exports.deleteCardById = exports.createCard = exports.getCardsByUserIdWithPaginate = exports.getCardsByUserId = exports.getCards = void 0;
 const mongoose = require('mongoose');
 const { Schema } = mongoose;
 const cardSchema = new Schema({
@@ -63,14 +63,21 @@ exports.default = Card;
 const getCards = () => __awaiter(void 0, void 0, void 0, function* () { return yield Card.find(); });
 exports.getCards = getCards;
 const getCardsByUserId = (userId) => __awaiter(void 0, void 0, void 0, function* () {
-    console.log(userId);
     return yield Card.find({
         user: userId
     });
 });
 exports.getCardsByUserId = getCardsByUserId;
+const getCardsByUserIdWithPaginate = (userId, page, limit) => __awaiter(void 0, void 0, void 0, function* () {
+    const skip = (page - 1) * limit; // Az ugrás értéke az oldalszám és az oldalankénti elemek szorzata
+    const cards = yield Card.find({ user: userId }).skip(skip).limit(limit); // Az adatbázisból csak az adott oldalhoz tartozó elemek kerülnek lekérdezésre
+    return cards;
+});
+exports.getCardsByUserIdWithPaginate = getCardsByUserIdWithPaginate;
 const createCard = (values) => __awaiter(void 0, void 0, void 0, function* () {
     const newCard = yield Card.create(values);
     return newCard;
 });
 exports.createCard = createCard;
+const deleteCardById = (id) => __awaiter(void 0, void 0, void 0, function* () { return yield Card.findOneAndDelete({ _id: id }); });
+exports.deleteCardById = deleteCardById;

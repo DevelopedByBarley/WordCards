@@ -1,15 +1,17 @@
 import { useContext, useEffect, useState } from "react";
 import { UserContext } from "../../contexts/UserContext";
 import Spinner from "../../components/Spinner";
-import { useFetchData } from "../../hooks/useFetchData";
 import { Link, useNavigate } from "react-router-dom";
+import { useFetchUserData } from "../../hooks/useFetchUserData";
 
 const Dashboard = () => {
   const navigate = useNavigate();
   const { user, setUser } = useContext(UserContext);
   const [isPending, setPending] = useState(true);
 
-  useFetchData({ setUser, setPending });
+  useFetchUserData({ setUser, setPending });
+
+
 
   useEffect(() => {
     if (!localStorage.getItem('accessToken')) navigate('/user/login');

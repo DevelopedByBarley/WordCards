@@ -5,7 +5,7 @@ import { UserContext } from "../../contexts/UserContext"
 import { getUser } from "../../services/AuthService"
 import { Link, useNavigate } from "react-router-dom"
 import { toast } from "react-toastify"
-import { useFetchData } from "../../hooks/useFetchData"
+import { useFetchUserData } from "../../hooks/useFetchUserData"
 import Spinner from "../../components/Spinner"
 
 const Login = () => {
@@ -14,7 +14,7 @@ const Login = () => {
   const [isPending, setPending] = useState(true);
   const navigate = useNavigate();
 
-  useFetchData({ setUser, setPending });
+  useFetchUserData({ setUser, setPending });
 
   useEffect(() => {
     if (localStorage.getItem('accessToken')) navigate('/user/dashboard');

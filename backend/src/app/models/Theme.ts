@@ -7,6 +7,9 @@ const themeSchema = new Schema({
     required: true,
     unique: true
   },
+  description: {
+    type: String,
+  },
   color: {
     type: String,
     required: true
@@ -29,9 +32,18 @@ const themeSchema = new Schema({
 
 const Theme = mongoose.model('Theme', themeSchema);
 
-module.exports = Theme;
+export default Theme;
 
-
+export const getThemesByUserId = async (userId: string) => {
+  return await Theme.find({
+    user: userId
+  })
+};
+export const getThemesByUserIdWithPaginate = async (userId: string, page: number, limit: number) => {
+  const skip = (page - 1) * limit; // Az ugrás értéke az oldalszám és az oldalankénti elemek szorzata
+  const themes = await Theme.find({ user: userId }).skip(skip).limit(limit); // Az adatbázisból csak az adott oldalhoz tartozó elemek kerülnek lekérdezésre
+  return themes;
+};
 export const createTheme = async (values: Record<string, any>) => {
   return await Theme.create(values);
 }

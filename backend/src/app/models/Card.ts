@@ -1,4 +1,4 @@
-const mongoose = require('mongoose');
+  const mongoose = require('mongoose');
 const { Schema } = mongoose;
 
 const cardSchema = new Schema({
@@ -52,15 +52,23 @@ const cardSchema = new Schema({
 const Card = mongoose.model('Card', cardSchema);
 
 export default Card;
+
 export const getCards = async () => { return await Card.find() };
 export const getCardsByUserId = async (userId: string) => {
-  console.log(userId);
   return await Card.find({
-   user: userId
+    user: userId
   })
+};
+
+export const getCardsByUserIdWithPaginate = async (userId: string, page: number, limit: number) => {
+  const skip = (page - 1) * limit; // Az ugrás értéke az oldalszám és az oldalankénti elemek szorzata
+  const cards = await Card.find({ user: userId }).skip(skip).limit(limit); // Az adatbázisból csak az adott oldalhoz tartozó elemek kerülnek lekérdezésre
+  return cards;
 };
 
 export const createCard = async (values: Record<string, any>) => {
   const newCard = await Card.create(values);
   return newCard;
 };
+
+export const deleteCardById = async (id: string) => { return await Card.findOneAndDelete({ _id: id }) }

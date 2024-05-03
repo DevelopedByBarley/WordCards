@@ -8,4 +8,5 @@ const authenticateToken_1 = require("../middlewares/authenticateToken");
 const router = (0, express_1.Router)();
 exports.cardRouter = router;
 router.get('/', authenticateToken_1.authenticateToken, card_controller_1.index);
+router.delete('/:id', authenticateToken_1.authenticateToken, card_controller_1.destroy);
 router.post('/store', authenticateToken_1.authenticateToken, multer_1.upload.single('file'), card_controller_1.store);

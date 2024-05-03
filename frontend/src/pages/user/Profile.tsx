@@ -1,5 +1,5 @@
-import React, { useContext, useEffect, useState } from 'react'
-import { useFetchData } from '../../hooks/useFetchData';
+import { useContext, useEffect, useState } from 'react'
+import { useFetchUserData } from '../../hooks/useFetchUserData';
 import { useNavigate } from 'react-router-dom';
 import { UserContext } from '../../contexts/UserContext';
 import Spinner from '../../components/Spinner';
@@ -10,7 +10,7 @@ const Profile = () => {
   const { user, setUser } = useContext(UserContext);
   const [isPending, setPending] = useState(true);
 
-  useFetchData({ setUser, setPending });
+  useFetchUserData({ setUser, setPending });
 
   useEffect(() => {
     if (!localStorage.getItem('accessToken')) navigate('/user/login');

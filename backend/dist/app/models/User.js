@@ -23,6 +23,10 @@ const userSchema = new Schema({
         type: Number,
         required: true,
     },
+    currentCapacity: {
+        type: Number,
+        default: 0,
+    },
     password: String,
     themes: [{
             type: Schema.Types.ObjectId,

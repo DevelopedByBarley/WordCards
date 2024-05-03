@@ -4,7 +4,7 @@ import { Link, useNavigate } from "react-router-dom"
 import { UserContext } from "../../contexts/UserContext"
 import axios from "axios"
 import { toast } from "react-toastify"
-import { useFetchData } from "../../hooks/useFetchData"
+import { useFetchUserData } from "../../hooks/useFetchUserData"
 
 const Register = () => { 
   const { theme } = useContext(ThemeContext)
@@ -13,7 +13,7 @@ const Register = () => {
 
   const [isPending, setPending] = useState(true);
 
-  useFetchData({ setUser, setPending });
+  useFetchUserData({ setUser, setPending });
 
   useEffect(() => {
     if (user.email) navigate('/user/dashboard');
@@ -29,8 +29,7 @@ const Register = () => {
       capacity: (elements.namedItem("capacity") as HTMLInputElement)?.value
     }
 
-    axios.post('/api/users/register', userData).then(res => {
-      console.log(res);
+    axios.post('/api/users/register', userData).then(() => {
       setPending(true)
       toast.success('Sikeres regisztráció');
       navigate('/user/login')

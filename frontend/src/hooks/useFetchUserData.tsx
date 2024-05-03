@@ -7,19 +7,19 @@ type UseFetchDataTypes = {
   setPending: Dispatch<SetStateAction<boolean>>
 }
 
-export const useFetchData = ({ setUser, setPending }: UseFetchDataTypes) => {
+export const useFetchUserData = ({ setUser, setPending }: UseFetchDataTypes) => {
 
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const user = await getUser();
+        const user = await getUser();        
         setUser(user);
       } catch (error) {
         console.error("Hiba történt a felhasználó betöltésekor:", error);
       } finally {
         setTimeout(() => {
           setPending(false);
-        }, 1000);
+        }, 100);
       }
     };
 

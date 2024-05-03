@@ -3,19 +3,34 @@ import { fetchAuthentication } from "../../services/AuthService";
 import { useNavigate } from "react-router-dom";
 import { useContext, useEffect, useState } from "react";
 import { UserContext } from "../../contexts/UserContext";
-import { useFetchData } from "../../hooks/useFetchData";
+import { useFetchUserData } from "../../hooks/useFetchUserData";
 import Spinner from "../../components/Spinner";
+
+type ThemesType = {
+  _id: string,
+  name: string
+  description: string
+  color: string
+}
 
 const AddCard = () => {
   const navigate = useNavigate();
 
   const { user, setUser } = useContext(UserContext);
   const [isPending, setPending] = useState(true);
+  const [themes, setThemes] = useState<ThemesType[]>([]);
 
-  useFetchData({ setUser, setPending });
+
+  useFetchUserData({ setUser, setPending });
 
   useEffect(() => {
     if (!localStorage.getItem('accessToken')) navigate('/user/login');
+
+    fetchAuthentication.get('/api/themes').then(res => {
+      const { data } = res.data
+      setThemes(data)
+    }).catch(err => console.error(err)
+    )
   }, [navigate, user])
 
   const sendCard = async (e: React.FormEvent<HTMLFormElement>) => {
@@ -29,7 +44,7 @@ const AddCard = () => {
       word: (elements.namedItem("word") as HTMLInputElement)?.value,
       translate: (elements.namedItem("translate") as HTMLInputElement)?.value,
       sentence: (elements.namedItem("sentence") as HTMLInputElement)?.value,
-      theme: (elements.namedItem("theme") as HTMLInputElement)?.value,
+      themeId: (elements.namedItem("theme") as HTMLInputElement)?.value,
     }
 
     const formData = new FormData();
@@ -37,19 +52,18 @@ const AddCard = () => {
     formData.append('data', JSON.stringify(newCard)); // Új kártya adatok hozzáadása a formData-hoz
 
     try {
-      const response = await fetchAuthentication.post('/api/cards/store', formData)
-        .then(res => {
-          console.log(res.data);
+      await fetchAuthentication.post('/api/cards/store', formData)
+        .then(() => {
           toast.success('Kártya sikeresen létrehozva!');
-          navigate('/cards/store');
+          navigate('/cards');
         })
-
-      console.log(response);
     } catch (error) {
       // Hiba kezelése
       console.error('Hiba történt a kártya küldése közben:', error);
     }
   }
+
+
 
 
 
@@ -72,6 +86,7 @@ const AddCard = () => {
                   type="text"
                   placeholder="Szó"
                   name="word"
+                  required
                   className="appearance-none block w-full bg-gray-200 text-gray-700 border rounded py-3 px-4 mb-3 leading-tight focus:outline-none focus:bg-white"
                 />
                 <p className="text-red-500 text-xs italic"></p>
@@ -86,6 +101,7 @@ const AddCard = () => {
                   placeholder="Fordítás"
                   name="tranlate"
                   autoComplete="off"
+                  required
                   className="appearance-none block w-full bg-gray-200 text-gray-700 border border-gray-200 rounded py-3 px-4 leading-tight focus:outline-none focus:bg-white focus:border-gray-500"
                 />
               </div>
@@ -100,6 +116,7 @@ const AddCard = () => {
                   type="text"
                   placeholder="Példamondat"
                   name="sentence"
+                  required
                   className="appearance-none block w-full bg-gray-200 text-gray-700 border border-gray-200 rounded py-3 px-4 mb-3 leading-tight focus:outline-none focus:bg-white focus:border-gray-500"
                 />
               </div>
@@ -118,33 +135,19 @@ const AddCard = () => {
                   <option value='' defaultChecked>
                     Válassza ki a témát
                   </option>
-                  <option value='bg-red-600'>
-                    Piros
-                  </option>
-                  <option value='bg-blue-600'>Kék</option>
-                  <option value='bg-purple-600'>Lila</option>
+                  {/* Téma bejárása és option elemek generálása */}
+                  {themes.map(theme => (
+                    <option key={theme._id} value={theme._id} >
+                      {theme.name}
+                    </option>
+                  ))}
                 </select>
               </div>
-
-
-              <div className="flex items-center justify-center w-full">
-                <label htmlFor="dropzone-file" className="flex flex-col items-center justify-center w-full h-64 border-2 border-gray-300  rounded-lg cursor-pointer bg-gray-50 dark:hover:bg-bray-800 dark:bg-gray-700 hover:bg-gray-100 dark:border-gray-600 dark:hover:border-gray-500 dark:hover:bg-gray-600">
-                  <div className="flex flex-col items-center justify-center pt-5 pb-6">
-                    <svg className="w-8 h-8 mb-4 text-gray-500 dark:text-gray-400" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 20 16">
-                      <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 13h3a3 3 0 0 0 0-6h-.025A5.56 5.56 0 0 0 16 6.5 5.5 5.5 0 0 0 5.207 5.021C5.137 5.017 5.071 5 5 5a4 4 0 0 0 0 8h2.167M10 15V6m0 0L8 8m2-2 2 2" />
-                    </svg>
-                    <p className="mb-2 text-sm text-gray-500 dark:text-gray-400"><span className="font-semibold">Click to upload</span> or drag and drop</p>
-                    <p className="text-xs text-gray-500 dark:text-gray-400">SVG, PNG, JPG or GIF (MAX. 800x400px)</p>
-                  </div>
-                  <input id="dropzone-file" type="file" name="file" className="hidden" />
-                </label>
-              </div>
-
-              <button type="submit" className="mt-4 bg-indigo-600 hover:bg-indigo-500 text-white px-5 py-3">Hozzáad</button>
-
             </div>
-          </form>
-        </div>
+            <button type="submit" className="mt-4 bg-indigo-600 hover:bg-indigo-500 text-white px-5 py-3">Hozzáad</button>
+
+          </form >
+        </div >
       )}
     </>
   );

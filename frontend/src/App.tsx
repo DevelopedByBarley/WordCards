@@ -12,9 +12,10 @@ import Dashboard from './pages/user/Dashboard';
 import { UserContextProvider } from './contexts/UserContext';
 import AddTheme from './pages/themes/AddTheme';
 import AddCard from './pages/cards/AddCard';
-import Cards from './pages/cards/Cards';
+import ThemeCards from './pages/themes/ThemeCards';
 import Themes from './pages/themes/Themes';
 import Profile from './pages/user/Profile';
+import CardList from './pages/cards/CardList';
 
 
 
@@ -29,11 +30,12 @@ const router = createBrowserRouter(
       <Route path='dashboard' element={<Dashboard />} />
     </Route>
     <Route path='cards'>
-      <Route path='' element={<Cards />} />
-
+      <Route path='' element={<CardList />} />
       <Route path='store' element={<AddCard />} />
     </Route>
-    <Route path='themes' element={<Themes />}>
+    <Route path='themes'>
+      <Route path='' element={<Themes />} />
+      <Route path='cards/:id' element={<ThemeCards />} />
       <Route path='store' element={<AddTheme />} />
     </Route>
   </Route>)
