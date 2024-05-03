@@ -28,6 +28,8 @@ const AddCard = () => {
 
     fetchAuthentication.get('/api/themes').then(res => {
       const { data } = res.data
+      console.log(data);
+      
       setThemes(data)
     }).catch(err => console.error(err)
     )
@@ -73,8 +75,8 @@ const AddCard = () => {
   return (
     <>
       {isPending ? <Spinner /> : (
-        <div className="container-fluid vh-100 flex flex-col items-center justify-center p-3 mt-32 md:mt-0" >
-          <h1 className="text-4xl mb-12">Kártya</h1>
+        <div className="container-fluid flex flex-col items-center justify-center p-3 " >
+          <h1 className="text-4xl mb-12 py-5">Kártya</h1>
           <form className="w-full max-w-lg max-h-minp-5" onSubmit={sendCard}>
             <div className="flex flex-wrap -mx-3 mb-6">
               <div className="w-full md:w-1/2 px-3 mb-6 md:mb-0">

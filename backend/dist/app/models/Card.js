@@ -9,7 +9,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.deleteCardById = exports.createCard = exports.getCardsByUserIdWithPaginate = exports.getCardsByUserId = exports.getCards = void 0;
+exports.deleteCardById = exports.createCard = exports.getCardsByThemeId = exports.getCardsByUserIdWithPaginate = exports.getCardsByUserId = exports.getCards = void 0;
 const mongoose = require('mongoose');
 const { Schema } = mongoose;
 const cardSchema = new Schema({
@@ -74,6 +74,12 @@ const getCardsByUserIdWithPaginate = (userId, page, limit) => __awaiter(void 0, 
     return cards;
 });
 exports.getCardsByUserIdWithPaginate = getCardsByUserIdWithPaginate;
+const getCardsByThemeId = (themeId) => __awaiter(void 0, void 0, void 0, function* () {
+    return yield Card.find({
+        themeId: themeId
+    });
+});
+exports.getCardsByThemeId = getCardsByThemeId;
 const createCard = (values) => __awaiter(void 0, void 0, void 0, function* () {
     const newCard = yield Card.create(values);
     return newCard;

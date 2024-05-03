@@ -1,12 +1,11 @@
-import React from 'react'
+
 
 
 
 
 const ThemeCards = () => {
   return (
-    <div>
-      
+    <div className='container'>
     </div>
   )
 }

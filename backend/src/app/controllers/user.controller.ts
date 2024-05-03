@@ -4,6 +4,7 @@ import { generateAccessToken, generateRefreshToken } from "../helpers/generateTo
 import bcrypt from 'bcrypt'
 import { setCardsForRepeat } from "../helpers/setCardsForRepeat";
 import Card from "../models/Card";
+import { createOtherThemeByUser } from "../models/Theme";
 
 const all = async (req: Request, res: Response) => {
   try {

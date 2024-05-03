@@ -9,15 +9,18 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.store = exports.index = void 0;
+exports.store = exports.all = void 0;
 const Theme_1 = require("../models/Theme");
-const index = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+const all = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const { user } = req;
-    const page = req.query.page ? parseInt(req.query.page) : 1;
+    const page = req.query.page ? parseInt(req.query.page) : null;
     const limit = 1;
     try {
         const allThemes = yield (0, Theme_1.getThemesByUserId)(user._id);
-        const themes = yield (0, Theme_1.getThemesByUserIdWithPaginate)(user._id, page, limit);
+        if (allThemes.length === 0) {
+            (0, Theme_1.createOtherThemeByUser)(user._id);
+        }
+        const themes = page ? yield (0, Theme_1.getThemesByUserIdWithPaginate)(user._id, page, limit) : allThemes;
         const pages = Math.ceil(allThemes.length / limit);
         return res.status(200).json({
             status: true,
@@ -34,11 +37,10 @@ const index = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
         });
     }
 });
-exports.index = index;
+exports.all = all;
 const store = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const { user } = req;
     const lang = 'En';
-    console.log(user);
     const { name, description, color } = req.body;
     try {
         const savedTheme = yield (0, Theme_1.createTheme)({

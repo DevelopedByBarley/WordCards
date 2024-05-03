@@ -8,8 +8,11 @@ const router = Router();
 
 
 router.get('/', authenticateToken, index);
-router.delete('/:id', authenticateToken, destroy);
+
 router.post('/store', authenticateToken, upload.single('file'), store);
+
+router.delete('/:id', authenticateToken, destroy);
+
 
 
 export { router as cardRouter };

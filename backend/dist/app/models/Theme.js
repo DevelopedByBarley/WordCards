@@ -9,7 +9,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.createTheme = exports.getThemesByUserIdWithPaginate = exports.getThemesByUserId = void 0;
+exports.createTheme = exports.getThemesByUserIdWithPaginate = exports.createOtherThemeByUser = exports.getThemesByUserId = void 0;
 const mongoose = require('mongoose');
 const { Schema } = mongoose;
 const themeSchema = new Schema({
@@ -47,10 +47,22 @@ const getThemesByUserId = (userId) => __awaiter(void 0, void 0, void 0, function
     });
 });
 exports.getThemesByUserId = getThemesByUserId;
+const createOtherThemeByUser = (userId) => __awaiter(void 0, void 0, void 0, function* () {
+    return yield Theme.create({
+        lang: 'En',
+        name: 'Egyéb',
+        description: 'Egyéb téma bármely kártyának',
+        color: 'bg-gray-900',
+        user: userId
+    });
+});
+exports.createOtherThemeByUser = createOtherThemeByUser;
 const getThemesByUserIdWithPaginate = (userId, page, limit) => __awaiter(void 0, void 0, void 0, function* () {
-    const skip = (page - 1) * limit; // Az ugrás értéke az oldalszám és az oldalankénti elemek szorzata
-    const themes = yield Theme.find({ user: userId }).skip(skip).limit(limit); // Az adatbázisból csak az adott oldalhoz tartozó elemek kerülnek lekérdezésre
-    return themes;
+    if (page) {
+        const skip = (page - 1) * limit; // Az ugrás értéke az oldalszám és az oldalankénti elemek szorzata
+        const themes = yield Theme.find({ user: userId }).skip(skip).limit(limit); // Az adatbázisból csak az adott oldalhoz tartozó elemek kerülnek lekérdezésre
+        return themes;
+    }
 });
 exports.getThemesByUserIdWithPaginate = getThemesByUserIdWithPaginate;
 const createTheme = (values) => __awaiter(void 0, void 0, void 0, function* () {

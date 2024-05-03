@@ -7,9 +7,7 @@ import Theme from "../models/Theme";
 const index = async (req: Request, res: Response) => {
   const { user }: Record<string, any> = req;
   const page = req.query.page ? parseInt(req.query.page as string) : 1;
-  const limit = 1;
-
-
+  const limit = 2;
 
   try {
     const allCards = await getCardsByUserId(user._id)
@@ -87,7 +85,7 @@ const store = async (req: Request, res: Response) => {
 const destroy = async (req: Request, res: Response) => {
   try {
 
-    const cardId = req.params.id;    
+    const cardId = req.params.id;
 
     // Keresd meg a Theme-et, amelynek a cards tömbje tartalmazza a kártyát
     const theme = await Theme.findOne({ cards: cardId });
@@ -125,6 +123,9 @@ const destroy = async (req: Request, res: Response) => {
     });
   }
 };
+
+
+
 
 
 

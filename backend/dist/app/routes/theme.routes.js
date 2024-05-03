@@ -6,5 +6,5 @@ const authenticateToken_1 = require("../middlewares/authenticateToken");
 const theme_controller_1 = require("../controllers/theme.controller");
 const router = (0, express_1.Router)();
 exports.themeRouter = router;
-router.get('/', authenticateToken_1.authenticateToken, theme_controller_1.index);
+router.get('/', authenticateToken_1.authenticateToken, theme_controller_1.all);
 router.post('/store', authenticateToken_1.authenticateToken, theme_controller_1.store);

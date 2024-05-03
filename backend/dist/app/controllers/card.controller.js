@@ -18,7 +18,7 @@ const Theme_1 = __importDefault(require("../models/Theme"));
 const index = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const { user } = req;
     const page = req.query.page ? parseInt(req.query.page) : 1;
-    const limit = 1;
+    const limit = 2;
     try {
         const allCards = yield (0, Card_1.getCardsByUserId)(user._id);
         const cards = yield (0, Card_1.getCardsByUserIdWithPaginate)(user._id, page, limit);
