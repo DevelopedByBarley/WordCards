@@ -145,11 +145,14 @@ const update = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
             theme: themeId,
             lang: lang,
         });
-        const updatedTheme = yield Theme_1.default.findByIdAndUpdate(themeId, {
-            $pull: { cards: cardId }
-        });
-        const newTheme = yield Theme_1.default.findOne({ _id: themeId });
-        yield Theme_1.default.updateOne({ _id: newTheme._id }, { $push: { cards: updatedCard._id } });
+        yield Theme_1.default.findOneAndUpdate({ cards: cardId }, // Keresési feltétel
+        { $pull: { cards: cardId } }, // Törlés a tömbből
+        { new: true } // Beállítás az új dokumentum lekérdezésére
+        );
+        yield Theme_1.default.findOneAndUpdate({ _id: themeId }, // Keresési feltétel
+        { $push: { cards: cardId } }, // Hozzáadás a tömbhöz
+        { new: true } // Beállítás az új dokumentum lekérdezésére
+        );
         return res.status(200).json({
             status: true,
             message: "Get cards successfully!",

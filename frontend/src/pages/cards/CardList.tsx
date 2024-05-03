@@ -77,7 +77,7 @@ const CardList = () => {
             </div>
 
           ) : (
-            <div className="container">
+            <div className="container mb-44">
               <div className="md:flex justify-between my-5">
 
                 <Link to={'/cards/store'}>

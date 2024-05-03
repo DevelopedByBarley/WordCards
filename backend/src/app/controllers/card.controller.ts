@@ -163,14 +163,17 @@ const update = async (req: Request, res: Response) => {
       lang: lang,
     })
 
-    const updatedTheme = await Theme.findByIdAndUpdate(themeId, {
-      $pull: { cards: cardId }
-    });
-    const newTheme = await Theme.findOne({ _id: themeId });
-    await Theme.updateOne({ _id: newTheme._id }, { $push: { cards: updatedCard._id } });
+    await Theme.findOneAndUpdate(
+      { cards: cardId }, // Keresési feltétel
+      { $pull: { cards: cardId } }, // Törlés a tömbből
+      { new: true } // Beállítás az új dokumentum lekérdezésére
+    )
 
-
-
+    await Theme.findOneAndUpdate(
+      { _id: themeId }, // Keresési feltétel
+      { $push: { cards: cardId } }, // Hozzáadás a tömbhöz
+      { new: true } // Beállítás az új dokumentum lekérdezésére
+    );
 
     return res.status(200).json({
       status: true,
@@ -181,12 +184,6 @@ const update = async (req: Request, res: Response) => {
     console.error(err)
   }
 }
-
-
-
-
-
-
 
 function replaceWordInSentence(translate: string, sentence: string) {
   var replacement = "_".repeat(translate.length);
